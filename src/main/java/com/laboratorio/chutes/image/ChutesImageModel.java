@@ -7,13 +7,11 @@ import com.laboratorio.chutes.image.model.ChutesImageRequest;
 import org.springframework.ai.image.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.Base64;
 import java.util.List;
 
-@Component
 public class ChutesImageModel implements ImageModel {
     private final ChutesImageApi imageApi;
     private final ChutesImageOptions imageOptions;

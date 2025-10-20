@@ -10,12 +10,10 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
-@Component
 public class ChutesChatModel implements ChatModel {
     private final ChutesLlmApi chutesLlmApi;
     private final ChutesLlmOptions llmOptions;

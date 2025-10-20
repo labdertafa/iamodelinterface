@@ -1,6 +1,5 @@
 package com.laboratorio.iamodelinterface.service;
 
-import com.laboratorio.chutes.llm.ChutesChatModel;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import com.laboratorio.iamodelinterface.model.UserChatRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = {ChutesLlmConfiguration.class, ChutesChatModel.class, MemoryChatService.class})
+@SpringBootTest(classes = {ChutesLlmConfiguration.class, MemoryChatService.class})
 @Slf4j
 public class MemoryChatServiceTest {
     @Autowired

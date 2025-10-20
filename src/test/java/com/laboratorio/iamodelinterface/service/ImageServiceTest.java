@@ -1,6 +1,5 @@
 package com.laboratorio.iamodelinterface.service;
 
-import com.laboratorio.chutes.image.ChutesImageModel;
 import com.laboratorio.clientapilibrary.utils.ReaderConfig;
 import com.laboratorio.iamodelinterface.config.ChutesImageConfiguration;
 import com.laboratorio.iamodelinterface.model.ImagenGeneratorFile;
@@ -11,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = {ChutesImageConfiguration.class, ChutesImageModel.class, ImageService.class})
+@SpringBootTest(classes = {ChutesImageConfiguration.class, ImageService.class})
 public class ImageServiceTest {
     @Autowired
     private ImageService imageService;

@@ -1,6 +1,5 @@
 package com.laboratorio.iamodelinterface.service;
 
-import com.laboratorio.chutes.llm.ChutesChatModel;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = {
         ChutesLlmConfiguration.class,
-        ChutesChatModel.class,
         SimpleChatService.class,
         F1DailyEventService.class})
 @Slf4j
