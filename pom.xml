@@ -6,7 +6,7 @@
 
     <groupId>com.laboratorio</groupId>
     <artifactId>iamodelinterface</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.7</version>
     <packaging>jar</packaging>
     <name>IaModelInterface</name>
     <description>Librería que ejecuta los modelos de inteligencia artificial usados por el Laboratorio de Rafa</description>

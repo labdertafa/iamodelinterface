@@ -18,6 +18,7 @@ import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,9 @@ import javax.sql.DataSource;
 
 @Configuration
 public class ChutesLlmConfiguration {
+    @Value("${spring.profiles.active:default}")
+    private String activeProfiles;
+
     private final ReaderConfig config = new ReaderConfig("config//ia_models_config.properties");
 
     @Bean
@@ -60,18 +64,36 @@ public class ChutesLlmConfiguration {
         return ChatClient.create(chatModel);
     }
 
+    private ConnectionData getConnectionData() {
+        String server;
+        String bbdd;
+        String username;
+        String password;
+        if (activeProfiles.contains("prod")) {
+            server = config.getProperty("servidor_pgvector");
+            bbdd = config.getProperty("bbdd_pg_vector");
+            username = config.getProperty("usuario_pgvector");
+            password = config.getProperty("password_pgvector");
+        } else {
+            server = config.getProperty("servidor_pgvector_test");
+            bbdd = config.getProperty("bbdd_pg_vector_test");
+            username = config.getProperty("usuario_pgvector_test");
+            password = config.getProperty("password_pgvector_test");
+        }
+
+        String url = "jdbc:postgresql://" + server + "/" + bbdd;
+
+        return new ConnectionData(username, password, url);
+    }
+
     @Bean(name = "pgVectorDataSource")
     public DataSource dataSource() {
-        String server = config.getProperty("servidor_pgvector");
-        String bbdd = config.getProperty("bbdd_pg_vector");
-        String username = config.getProperty("usuario_pgvector");
-        String password = config.getProperty("password_pgvector");
-        String url = "jdbc:postgresql://" + server + "/" + bbdd;
+        ConnectionData cd = this.getConnectionData();
         return DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
-                .url(url)
-                .username(username)
-                .password(password)
+                .url(cd.url())
+                .username(cd.username())
+                .password(cd.password())
                 .build();
     }
 
