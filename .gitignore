@@ -1,6 +1,6 @@
 target/
-socialimprove/
-config/
+/socialimprove/
+/config/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
