@@ -19,7 +19,7 @@ public class ImageServiceTest {
 
     @Test
     public void simpleImageTest() {
-        String prompt = "Crea una imagen de un oso pardo en una cascada en la naturaleza";
+        String prompt = "Crea una imagen de un oso pardo en una cascada en la naturaleza. No agregues texto a la imagen";
 
         ImagenGeneratorFile file = this.imageService.generateImage(prompt);
 
