@@ -22,7 +22,7 @@ public class F1DailyEventServiceTest {
 
     @Test
     public void f1ChatTest() {
-        LocalDate fecha = LocalDate.of(2025, 1, 11);
+        LocalDate fecha = LocalDate.of(2025, 11, 16);
 
         String respuesta = this.chatService.getEventResponse(fecha);
 
