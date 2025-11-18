@@ -1,5 +1,6 @@
 package com.laboratorio.iamodelinterface.service;
 
+import com.laboratorio.iamodelinterface.config.ChutesEmbeddingConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = {
         ChutesLlmConfiguration.class,
+        ChutesEmbeddingConfiguration.class,
         SimpleChatService.class,
         F1DailyEventService.class})
 @Slf4j
@@ -22,7 +24,7 @@ public class F1DailyEventServiceTest {
 
     @Test
     public void f1ChatTest() {
-        LocalDate fecha = LocalDate.of(2025, 11, 16);
+        LocalDate fecha = LocalDate.of(2025, 1, 4);
 
         String respuesta = this.chatService.getEventResponse(fecha);
 

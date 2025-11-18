@@ -36,7 +36,7 @@ public class F1DailyEventService {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", new Locale("fr", "FR"));
             String nombreMes = date.format(formatter);
-            String prompt = String.format("Dis-moi un événement important survenu en Formule 1 un jour comme aujourd’hui (%d %s)",
+            String prompt = String.format("Dis-moi un événement important survenu en Formule 1 un jour comme aujourd’hui, %d %s",
                     date.getDayOfMonth(), nombreMes);
             log.info("Traducción: {}", prompt);
 

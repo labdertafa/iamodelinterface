@@ -12,11 +12,6 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.ai.chat.memory.repository.jdbc.PostgresChatMemoryRepositoryDialect;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.mistralai.MistralAiEmbeddingModel;
-import org.springframework.ai.mistralai.MistralAiEmbeddingOptions;
-import org.springframework.ai.mistralai.api.MistralAiApi;
-import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -121,35 +116,6 @@ public class ChutesLlmConfiguration {
                                        @Qualifier("chutesChatMemory")ChatMemory chatMemory) {
         return ChatClient.builder(chatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
-                .build();
-    }
-
-    @Bean(name = "chutesEmbeddingModel")
-    @Primary
-    public EmbeddingModel embeddingModel() {
-        String mistralApiKey = this.config.getProperty("spring.ai.mistralai.api-key");
-        String modelName = this.config.getProperty("f1_daily_event.model.name");
-
-        return new MistralAiEmbeddingModel(
-                new MistralAiApi(mistralApiKey),
-                MistralAiEmbeddingOptions.builder()
-                        .withModel(modelName)
-                        .build()
-        );
-    }
-
-    @Bean(name = "F1PgVectorStore")
-    public PgVectorStore pgVectorStore(@Qualifier("pgVectorJdbcTemplate")JdbcTemplate jdbcTemplate,
-                                       @Qualifier("chutesEmbeddingModel")EmbeddingModel embeddingModel) {
-        String tableName = this.config.getProperty("f1_daily_event.table.name");
-        int nDimensions = Integer.parseInt(this.config.getProperty("f1_daily_event.n.dimensions"));
-
-        return PgVectorStore.builder(jdbcTemplate, embeddingModel)
-                .vectorTableName(tableName)
-                .initializeSchema(true)
-                .indexType(PgVectorStore.PgIndexType.HNSW)
-                .distanceType(PgVectorStore.PgDistanceType.COSINE_DISTANCE)
-                .dimensions(nDimensions)
                 .build();
     }
 }
