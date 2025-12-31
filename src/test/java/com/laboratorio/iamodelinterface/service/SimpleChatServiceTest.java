@@ -17,8 +17,8 @@ public class SimpleChatServiceTest {
     @Test
     public void simpleChatTest() {
         String prompt = """
-                Dime un evento histórico relevante en las áreas de la tecnología, computación, informática o la
-                innovación en el día 30 de diciembre. Si no estás 100% seguro de tu respuesta, contéstame NO ENCONTRE.
+                Dime un evento histórico relevante en las áreas de la tecnología, computación, informática o la innovación en el día 31 de diciembre.
+                Si no estás 100% seguro de tu respuesta, contéstame NO ENCONTRE.
                 La respuesta debe limitarse a la información que te estoy solicitando y debe tener menos de 280 caracteres.
                 """;
 

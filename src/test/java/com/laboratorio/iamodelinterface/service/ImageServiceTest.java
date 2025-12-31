@@ -23,7 +23,7 @@ public class ImageServiceTest {
 
         String prompt = """
                 Create a detailed, visually appealing illustration that represents the following text conceptually and symbolically:
-                "On December 28, 1983, the Apple Lisa was launched, one of the first personal computers with a graphical interface and a mouse, serving as a precursor to the Macintosh."
+                "On December 31, 1999, the world celebrated the arrival of the new millennium and the success in avoiding the feared 'Year 2000 problem' or Y2K, which could have caused failures in computer systems when the century changed."
                 Focus on key visual elements, atmosphere, and emotions suggested by the text.
                 Use a modern, cinematic, or artistic style depending on the theme.
                 No text, no letters, no typography, no captions, no logos.
