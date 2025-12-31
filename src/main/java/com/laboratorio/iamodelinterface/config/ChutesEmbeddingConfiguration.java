@@ -18,7 +18,7 @@ public class ChutesEmbeddingConfiguration {
 
     @Bean
     public ChutesEmbeddingApi chutesEmbeddingApi() {
-        String apiKey = this.config.getProperty("bearer_token");
+        String apiKey = this.config.getProperty("chutes_bearer_token");
         String baseUrl = this.config.getProperty("embedding.url");
         String uri = this.config.getProperty("embedding.uri");
         return new ChutesEmbeddingApi(apiKey, baseUrl, uri);

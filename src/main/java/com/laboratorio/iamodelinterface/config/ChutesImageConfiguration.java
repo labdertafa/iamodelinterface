@@ -15,7 +15,7 @@ public class ChutesImageConfiguration {
 
     @Bean
     public ChutesImageApi chutesImageApi() {
-        String apiKey = this.config.getProperty("bearer_token");
+        String apiKey = this.config.getProperty("chutes_bearer_token");
         String baseUrl = this.config.getProperty("image_baseurl");
         String uri = this.config.getProperty("image_uri");
 

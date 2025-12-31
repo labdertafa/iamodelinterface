@@ -1,6 +1,9 @@
 package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
+import com.laboratorio.iamodelinterface.config.GeminiLlmConfiguration;
+import com.laboratorio.iamodelinterface.config.MemoryDataSourceConfig;
+import com.laboratorio.iamodelinterface.config.llmConfiguration;
 import com.laboratorio.iamodelinterface.model.UserChatRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,13 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = {ChutesLlmConfiguration.class, MemoryChatService.class})
+@SpringBootTest(classes = {
+        MemoryDataSourceConfig.class,
+        ChutesLlmConfiguration.class,
+        GeminiLlmConfiguration.class,
+        llmConfiguration.class,
+        MemoryChatService.class
+})
 @Slf4j
 public class MemoryChatServiceTest {
     @Autowired
