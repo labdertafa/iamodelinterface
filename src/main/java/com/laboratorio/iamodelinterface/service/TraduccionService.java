@@ -32,7 +32,7 @@ public class TraduccionService {
 
             return iaResponse != null ? iaResponse.response() : "No se obtuvo respuesta";
         } catch (Exception e) {
-            throw new IaModelException("Error obteniendo respuesta de chat simple", e);
+            throw new IaModelException("Error obteniendo la respuesta de una traducción", e);
         }
     }
 }

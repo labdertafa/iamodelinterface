@@ -1,4 +1,4 @@
-package com.laboratorio.iamodelinterface.config;
+package com.laboratorio.iamodelinterface.model;
 
 public record ConnectionData(
         String username,

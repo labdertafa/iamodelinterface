@@ -2,7 +2,6 @@ package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.IAResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
-@Slf4j
 public class F1DailyEventService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
@@ -38,7 +36,6 @@ public class F1DailyEventService {
             String nombreMes = date.format(formatter);
             String prompt = String.format("Dis-moi un événement important survenu en Formule 1 un jour comme aujourd’hui, %d %s",
                     date.getDayOfMonth(), nombreMes);
-            log.info("Traducción: {}", prompt);
 
             String documents = String.join("\n", this.findSimilarDocuments(prompt,
                     date.getDayOfMonth(), date.getMonthValue()));
