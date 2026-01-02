@@ -16,9 +16,9 @@ import org.apache.logging.log4j.Logger;
 /**
  *
  * author Rafael
- * version 1.1
+ * version 1.2
  * created 20/08/2024
- * updated 01/09/2025
+ * updated 02/01/2026
  */
 public class ImageGeneratorUtils {
     private static final Logger log = LogManager.getLogger(ImageGeneratorUtils.class);
@@ -107,6 +107,23 @@ public class ImageGeneratorUtils {
         g2d.dispose();
 
         return resizedImage;
+    }
+
+    // Redimensiona una imagen de un fichero
+    public static void resizeImage(String imagePath, double factor) {
+        try {
+            // 1. Cargar el archivo desde el disco
+            File imageFile = new File(imagePath);
+            BufferedImage originalImage = ImageIO.read(imageFile);
+
+            int newWidth = (int)(originalImage.getWidth() * factor);
+            int newHeight = (int)(originalImage.getHeight() * factor);
+
+            BufferedImage resizedImage = resizeImage(originalImage, newWidth, newHeight);
+            ImageIO.write(resizedImage, "jpg", imageFile);
+        } catch (IOException e) {
+            log.warn("Ha ocurrido un error cambiando las dimensiones de la imagen. Se conserva la imagen original.");
+        }
     }
 
     // Guarda una imagen desde un URL y la almacena en el fichero destinationFile
