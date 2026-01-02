@@ -24,6 +24,7 @@ public class ImageService {
 
             String destinationFile = config.getProperty("temporal_image_path");
             ImageGeneratorUtils.decodificarImagenBase64(response.getResult().getOutput().getB64Json(), destinationFile);
+            ImageGeneratorUtils.toJpgFormat(destinationFile);
 
             String contentType = config.getProperty("image_media_type");
 

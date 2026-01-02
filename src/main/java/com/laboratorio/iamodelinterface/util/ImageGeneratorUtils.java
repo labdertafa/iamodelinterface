@@ -42,7 +42,7 @@ public class ImageGeneratorUtils {
     }
 
     // Guarda una imagen codificada en base 64 en el fichero destinationFile
-    public static String decodificarImagenBase64(String codedImage, String destinationFile) {
+    public static String decodificarImagenBase64(String codedImage, String destinationFile) throws IOException {
         OutputStream os;
 
         try {
@@ -56,38 +56,13 @@ public class ImageGeneratorUtils {
         } catch (IOException e) {
             log.error("Ha ocurrido un error decodificando una image en base 64");
             logException(e);
-            return null;
+            throw e;
         }
 
         try {
             os.close();
         } catch (IOException e) {
             log.warn("Ha ocurrido un error cerrando el fichero de la imagen decodificada");
-        }
-
-        return destinationFile;
-    }
-
-    public static String almacenarImagen(byte[] imageData, String destinationFile) {
-        OutputStream os;
-
-        try {
-            // Si existe el fichero se borra
-            deleteFile(destinationFile);
-
-            os = new FileOutputStream(destinationFile);
-            os.write(imageData);
-            os.close();
-        } catch (IOException e) {
-            log.error("Ha ocurrido un error almacenando la imagen recibida");
-            logException(e);
-            return null;
-        }
-
-        try {
-            os.close();
-        } catch (IOException e) {
-            log.warn("Ha ocurrido un error cerrando el fichero de la imagen almacenada");
         }
 
         return destinationFile;
@@ -123,6 +98,17 @@ public class ImageGeneratorUtils {
             ImageIO.write(resizedImage, "jpg", imageFile);
         } catch (IOException e) {
             log.warn("Ha ocurrido un error cambiando las dimensiones de la imagen. Se conserva la imagen original.");
+        }
+    }
+
+    // Nos asegura que el formato de la imagen generada sea JPG
+    public static void toJpgFormat(String imagePath) {
+        try {
+            File imageFile = new File(imagePath);
+            BufferedImage originalImage = ImageIO.read(imageFile);
+            ImageIO.write(originalImage, "jpg", imageFile);
+        } catch (IOException e) {
+            log.warn("Ha ocurrido un error cambiando el formato de la imagen generada.");
         }
     }
 
