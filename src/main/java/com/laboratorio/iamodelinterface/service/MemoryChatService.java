@@ -32,7 +32,7 @@ public class MemoryChatService {
                     .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, request.userId()))
                     .call().entity(IAResponse.class);
 
-            return iaResponse.response();
+            return iaResponse != null ? iaResponse.response() : "No se obtuvo respuesta";
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo respuesta de chat con memoria", e);
         }

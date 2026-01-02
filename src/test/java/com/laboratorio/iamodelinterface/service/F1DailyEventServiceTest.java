@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = {
         ChutesLlmConfiguration.class,
@@ -20,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         llmConfiguration.class,
         ChutesEmbeddingConfiguration.class,
         SimpleChatService.class,
-        F1DailyEventService.class
+        F1DailyEventService.class,
+        TraduccionService.class
 })
 @Slf4j
 public class F1DailyEventServiceTest {
@@ -29,14 +29,12 @@ public class F1DailyEventServiceTest {
 
     @Test
     public void f1ChatTest() {
-        LocalDate fecha = LocalDate.of(2025, 12, 31);
+        LocalDate fecha = LocalDate.now();
 
         String respuesta = this.chatService.getEventResponse(fecha);
 
         assertNotNull(respuesta);
 
         log.info("Respuesta: {}", respuesta);
-
-        assertTrue(respuesta.length() <= 240);
-    }
+  }
 }

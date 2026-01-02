@@ -19,7 +19,8 @@ public class SimpleChatService {
             ChatResponse chatResponse = this.chatClient.prompt(prompt)
                 .call().chatResponse();
 
-            return chatResponse.getResult().getOutput().getText();
+            return chatResponse != null ?
+                    chatResponse.getResult().getOutput().getText() : "No se obtuvo respuesta";
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo respuesta de chat simple", e);
         }

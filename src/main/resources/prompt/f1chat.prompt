@@ -4,7 +4,6 @@ Tu tarea es contestar la pregunta de la sección QUESTION usando únicamente la 
 Instrucciones estrictas para la respuesta:
 - Si la información NO está en DOCUMENTS, responde exactamente: NO ENCONTRE
 - Si la información está en DOCUMENTS, responde con un objeto JSON válido con un único campo llamado "response".
-- El valor de "response" debe estar en idioma español.
 - El texto en "response" debe tener un máximo de 240 caracteres.
 - No incluyas texto adicional, explicaciones, comentarios, ni bloques de código.
 

@@ -20,14 +20,16 @@ import java.util.Locale;
 public class F1DailyEventService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
+    private final TraduccionService traduccionService;
 
     @Value("classpath:prompt/f1chat.prompt")
     private Resource promptTemplate;
 
     public F1DailyEventService(@Qualifier("simpleChatClient")ChatClient chatClient,
-                               @Qualifier("F1PgVectorStore")VectorStore vectorStore) {
+                               @Qualifier("F1PgVectorStore")VectorStore vectorStore, TraduccionService traduccionService) {
         this.chatClient = chatClient;
         this.vectorStore = vectorStore;
+        this.traduccionService = traduccionService;
     }
 
     public String getEventResponse(LocalDate date) {
@@ -49,7 +51,11 @@ public class F1DailyEventService {
                     .call()
                     .entity(IAResponse.class);
 
-            return iaResponse != null ? iaResponse.response() : "No se obtuvo respuesta";
+            if (iaResponse == null) {
+                return "No se obtuvo respuesta";
+            }
+
+            return this.traduccionService.getChatResponse("Español", iaResponse.response());
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo respuesta en el chat especializado en F1", e);
         }
