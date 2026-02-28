@@ -2,40 +2,38 @@ package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.IAResponse;
-import com.laboratorio.iamodelinterface.model.UserChatRequest;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MemoryChatService {
-    @Value("classpath:prompt/memorychat.prompt")
-    private Resource promptResource;
+public class SintesisService {
+    @Value("classpath:prompt/sintesis.prompt")
+    private Resource promptTemplate;
 
     private final ChatClient chatClient;
 
-    public MemoryChatService(@Qualifier("memoryChatClient")ChatClient chatClient) {
+    public SintesisService(@Qualifier("simpleChatClient")ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
-    public String getChatResponse(UserChatRequest request) {
+    public String getChatResponse(int maxSize, String prompt) {
         try {
-            IAResponse iaResponse = this.chatClient
-                    .prompt()
+            IAResponse iaResponse = this.chatClient.prompt()
                     .user(promptUserSpec -> promptUserSpec
-                            .text(this.promptResource)
-                            .param("message", request)
+                            .text(this.promptTemplate)
+                            .param("max_size", maxSize)
+                            .param("entrada", prompt)
                     )
-                    .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, request.userId()))
-                    .call().entity(IAResponse.class);
+                    .call()
+                    .entity(IAResponse.class);
 
             return iaResponse != null ? iaResponse.response() : Constantes.WRONG_ANSWER;
         } catch (Exception e) {
-            throw new IaModelException("Error obteniendo respuesta de chat con memoria", e);
+            throw new IaModelException("Error obteniendo la respuesta de una síntesis", e);
         }
     }
 }

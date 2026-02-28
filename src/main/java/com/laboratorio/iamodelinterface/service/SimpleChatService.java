@@ -1,6 +1,7 @@
 package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
+import com.laboratorio.iamodelinterface.util.Constantes;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,7 @@ public class SimpleChatService {
                 .call().chatResponse();
 
             return chatResponse != null ?
-                    chatResponse.getResult().getOutput().getText() : "No se obtuvo respuesta";
+                    chatResponse.getResult().getOutput().getText() : Constantes.WRONG_ANSWER;
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo respuesta de chat simple", e);
         }

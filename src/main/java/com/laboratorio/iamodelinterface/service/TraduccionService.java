@@ -2,6 +2,7 @@ package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.IAResponse;
+import com.laboratorio.iamodelinterface.util.Constantes;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,7 @@ public class TraduccionService {
                     .call()
                     .entity(IAResponse.class);
 
-            return iaResponse != null ? iaResponse.response() : "No se obtuvo respuesta";
+            return iaResponse != null ? iaResponse.response() : Constantes.WRONG_ANSWER;
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo la respuesta de una traducción", e);
         }

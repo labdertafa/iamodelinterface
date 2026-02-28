@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         ChutesEmbeddingConfiguration.class,
         SimpleChatService.class,
         F1DailyEventService.class,
-        TraduccionService.class
+        TraduccionService.class,
+        SintesisService.class
 })
 @Slf4j
 public class F1DailyEventServiceTest {
@@ -29,7 +30,7 @@ public class F1DailyEventServiceTest {
 
     @Test
     public void f1ChatTest() {
-        LocalDate fecha = LocalDate.now();
+        LocalDate fecha = LocalDate.of(2026, 2, 24);
 
         String respuesta = this.chatService.getEventResponse(fecha);
 
