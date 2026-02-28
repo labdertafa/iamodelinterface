@@ -4,16 +4,18 @@ import com.laboratorio.chutes.exception.ChutesException;
 import com.laboratorio.chutes.llm.config.ChutesLlmApi;
 import com.laboratorio.chutes.llm.config.ChutesLlmOptions;
 import com.laboratorio.chutes.llm.model.*;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.lang.NonNull;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
+@Slf4j
 public class ChutesChatModel implements ChatModel {
     private final ChutesLlmApi chutesLlmApi;
     private final ChutesLlmOptions llmOptions;
@@ -30,11 +32,12 @@ public class ChutesChatModel implements ChatModel {
     }
 
     @Override
-    @NonNull
-    public ChatResponse call(Prompt prompt) {
+    public @NonNull ChatResponse call(Prompt prompt) {
         try {
             // 1. Convertir el Prompt de Spring AI al formato que espera Chutes
             ChutesChatRequest request = this.createRequestFromPrompt(prompt);
+
+            log.debug("Antes de llamar al modelo LLM: {}",this.llmOptions.model());
 
             // 2. Llamar a la API
             ChutesChatResponse response = this.restClient.post()
@@ -42,6 +45,8 @@ public class ChutesChatModel implements ChatModel {
                     .body(request)
                     .retrieve()
                     .body(ChutesChatResponse.class);
+
+            log.debug("Respuesta del modelo LLM: {}", response);
 
             if (response == null) {
                 throw new ChutesException( "La respuesta de Chutes AI ha sido nula");
