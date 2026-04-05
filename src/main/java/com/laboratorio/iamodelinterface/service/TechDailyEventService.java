@@ -17,28 +17,26 @@ import java.time.LocalDate;
 
 @Service
 @Slf4j
-public class F1DailyEventService {
+public class TechDailyEventService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
-    private final TraduccionService traduccionService;
     private final SintesisService sintesisService;
 
-    @Value("classpath:prompt/f1chat.prompt")
+    @Value("classpath:prompt/techchat.prompt")
     private Resource promptTemplate;
 
-    public F1DailyEventService(@Qualifier("simpleChatClient")ChatClient chatClient,
-                               @Qualifier("F1PgVectorStore")VectorStore vectorStore,
-                               TraduccionService traduccionService, SintesisService sintesisService) {
+    public TechDailyEventService(@Qualifier("simpleChatClient") ChatClient chatClient,
+                                 @Qualifier("TechPgVectorStore") VectorStore vectorStore,
+                                 SintesisService sintesisService) {
         this.chatClient = chatClient;
         this.vectorStore = vectorStore;
-        this.traduccionService = traduccionService;
         this.sintesisService = sintesisService;
     }
 
     public String getEventResponse(LocalDate date) {
         try {
-            String nombreMes = FunctionsUtil.getMonthName(date, IdiomaEnum.FRANCES);
-            String prompt = String.format("Dis‑moi l’événement le plus important survenu en Formule 1 un jour comme aujourd’hui, %d %s",
+            String nombreMes = FunctionsUtil.getMonthName(date, IdiomaEnum.CASTELLANO);
+            String prompt = String.format("Dime el evento histórico más relevante en el area en las áreas de la tecnología, computación, informática o la innovación en un día como hoy %d de %s",
                     date.getDayOfMonth(), nombreMes);
 
             String documents = String.join("\n", FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonth(
@@ -59,21 +57,15 @@ public class F1DailyEventService {
 
             log.debug("Respuesta original: {}", iaResponse.response());
 
-            String traduccion = this.traduccionService.getChatResponse("Español", iaResponse.response());
-            if (traduccion.equals(Constantes.WRONG_ANSWER)) {
-                return Constantes.WRONG_ANSWER;
+            String sintesis = iaResponse.response();
+            if (sintesis.length() > Constantes.MAX_SIZE) {
+                sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, sintesis);
+                log.debug("Respuesta sintetizada: {}", sintesis);
             }
 
-            log.debug("Respuesta traducida: {}", traduccion);
-
-            if (traduccion.length() > Constantes.MAX_SIZE) {
-                traduccion = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, traduccion);
-                log.debug("Respuesta sintetizada: {}", traduccion);
-            }
-
-            return "#EnUnDiaComoHoy " + traduccion;
+            return "#EnUnDiaComoHoy " + sintesis;
         } catch (Exception e) {
-            throw new IaModelException("Error obteniendo respuesta en el chat especializado en F1", e);
+            throw new IaModelException("Error obteniendo respuesta en el chat especializado en tecnología", e);
         }
     }
 }

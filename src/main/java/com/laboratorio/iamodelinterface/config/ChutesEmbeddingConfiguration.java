@@ -31,14 +31,29 @@ public class ChutesEmbeddingConfiguration {
     }
 
     @Bean(name = "F1PgVectorStore")
-    public VectorStore VectorStore(@Qualifier("pgVectorJdbcTemplate") JdbcTemplate jdbcTemplate,
+    public VectorStore f1VectorStore(@Qualifier("pgVectorJdbcTemplate") JdbcTemplate jdbcTemplate,
                                      @Qualifier("chutesEmbeddingModel")EmbeddingModel embeddingModel) {
         String tableName = this.config.getProperty("f1_daily_event.table.name");
         int nDimensions = Integer.parseInt(this.config.getProperty("embedding.dimensions"));
 
         return PgVectorStore.builder(jdbcTemplate, embeddingModel)
                 .vectorTableName(tableName)
-                .initializeSchema(true)
+                .initializeSchema(false)
+                .indexType(PgVectorStore.PgIndexType.NONE)
+                .distanceType(PgVectorStore.PgDistanceType.COSINE_DISTANCE)
+                .dimensions(nDimensions)
+                .build();
+    }
+
+    @Bean(name = "TechPgVectorStore")
+    public VectorStore techVectorStore(@Qualifier("pgVectorJdbcTemplate") JdbcTemplate jdbcTemplate,
+                                       @Qualifier("chutesEmbeddingModel")EmbeddingModel embeddingModel) {
+        String tableName = this.config.getProperty("tech_daily_event.table.name");
+        int nDimensions = Integer.parseInt(this.config.getProperty("embedding.dimensions"));
+
+        return PgVectorStore.builder(jdbcTemplate, embeddingModel)
+                .vectorTableName(tableName)
+                .initializeSchema(false)
                 .indexType(PgVectorStore.PgIndexType.NONE)
                 .distanceType(PgVectorStore.PgDistanceType.COSINE_DISTANCE)
                 .dimensions(nDimensions)

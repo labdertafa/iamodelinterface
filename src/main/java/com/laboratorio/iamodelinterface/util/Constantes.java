@@ -6,4 +6,6 @@ public class Constantes {
 
     public final static int MAX_SIZE = 240;
     public final static String WRONG_ANSWER = "No se obtuvo respuesta";
+
+    public final static String MONTH_PATTERN = "MMMM";
 }
