@@ -1,5 +1,6 @@
 package com.laboratorio.iamodelinterface.service;
 
+import com.laboratorio.iamodelinterface.GroqLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesEmbeddingConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.GeminiLlmConfiguration;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = {
         ChutesLlmConfiguration.class,
         GeminiLlmConfiguration.class,
+        GroqLlmConfiguration.class,
         llmConfiguration.class,
         ChutesEmbeddingConfiguration.class,
         SimpleChatService.class,

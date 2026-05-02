@@ -25,7 +25,7 @@ public class TechDailyEventService {
     @Value("classpath:prompt/techchat.prompt")
     private Resource promptTemplate;
 
-    public TechDailyEventService(@Qualifier("simpleChatClient") ChatClient chatClient,
+    public TechDailyEventService(@Qualifier("groqSimpleChatClient") ChatClient chatClient,
                                  @Qualifier("TechPgVectorStore") VectorStore vectorStore,
                                  SintesisService sintesisService) {
         this.chatClient = chatClient;
@@ -43,10 +43,11 @@ public class TechDailyEventService {
                     this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue()));
 
             IAResponse iaResponse = this.chatClient.prompt()
-                    .user(promptUserSpec -> promptUserSpec
-                            .text(this.promptTemplate)
-                            .param("input", prompt)
-                            .param("documents", documents)
+                    .user(
+                            promptUserSpec -> promptUserSpec
+                                    .text(this.promptTemplate)
+                                    .param("input", prompt)
+                                    .param("documents", documents)
                     )
                     .call()
                     .entity(IAResponse.class);

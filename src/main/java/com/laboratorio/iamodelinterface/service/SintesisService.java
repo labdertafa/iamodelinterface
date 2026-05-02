@@ -4,6 +4,7 @@ import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.IAResponse;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -16,13 +17,13 @@ public class SintesisService {
 
     private final ChatClient chatClient;
 
-    public SintesisService(@Qualifier("simpleChatClient")ChatClient chatClient) {
+    public SintesisService(@Qualifier("groqSimpleChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
     public String getChatResponse(int maxSize, String prompt) {
         try {
-            IAResponse iaResponse = this.chatClient.prompt()
+            /* IAResponse iaResponse = this.chatClient.prompt()
                     .user(promptUserSpec -> promptUserSpec
                             .text(this.promptTemplate)
                             .param("max_size", maxSize)
@@ -31,7 +32,19 @@ public class SintesisService {
                     .call()
                     .entity(IAResponse.class);
 
-            return iaResponse != null ? iaResponse.response() : Constantes.WRONG_ANSWER;
+            return iaResponse != null ? iaResponse.response() : Constantes.WRONG_ANSWER; */
+
+            String respuesta = this.chatClient.prompt()
+                    .user(promptUserSpec -> promptUserSpec
+                            .text(this.promptTemplate)
+                            .param("max_size", maxSize)
+                            .param("entrada", prompt)
+                    )
+                    .call()
+                    .chatResponse().getResult().getOutput().getText();
+
+            return respuesta != null ? respuesta : Constantes.WRONG_ANSWER;
+
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo la respuesta de una síntesis", e);
         }

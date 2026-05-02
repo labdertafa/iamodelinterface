@@ -16,17 +16,18 @@ public class TraduccionService {
 
     private final ChatClient chatClient;
 
-    public TraduccionService(@Qualifier("simpleChatClient")ChatClient chatClient) {
+    public TraduccionService(@Qualifier("groqSimpleChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
     public String getChatResponse(String language, String prompt) {
         try {
             IAResponse iaResponse = this.chatClient.prompt()
-                    .user(promptUserSpec -> promptUserSpec
-                            .text(this.promptTemplate)
-                            .param("idioma", language)
-                            .param("entrada", prompt)
+                    .user(
+                            promptUserSpec -> promptUserSpec
+                                    .text(this.promptTemplate)
+                                    .param("idioma", language)
+                                    .param("entrada", prompt)
                     )
                     .call()
                     .entity(IAResponse.class);

@@ -18,7 +18,7 @@ public class MemoryChatService {
 
     private final ChatClient chatClient;
 
-    public MemoryChatService(@Qualifier("memoryChatClient")ChatClient chatClient) {
+    public MemoryChatService(@Qualifier("groqMemoryChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
@@ -26,11 +26,14 @@ public class MemoryChatService {
         try {
             IAResponse iaResponse = this.chatClient
                     .prompt()
-                    .user(promptUserSpec -> promptUserSpec
-                            .text(this.promptResource)
-                            .param("message", request)
+                    .user(
+                            promptUserSpec -> promptUserSpec
+                                    .text(this.promptResource)
+                                    .param("message", request)
                     )
-                    .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, request.userId()))
+                    .advisors(
+                            advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, request.userId())
+                    )
                     .call().entity(IAResponse.class);
 
             return iaResponse != null ? iaResponse.response() : Constantes.WRONG_ANSWER;

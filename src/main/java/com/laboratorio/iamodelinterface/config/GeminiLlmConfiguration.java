@@ -21,7 +21,7 @@ public class GeminiLlmConfiguration {
 
     @Bean(name = "geminiChatModel")
     public ChatModel geminiChatModel() {
-        String apiKey = this.config.getProperty("gemini_bearer_token");
+        String apiKey = this.config.getProperty("gemini_api_key");
         String model = this.config.getProperty("gemini_text_model");
         Double temperature = Double.valueOf(this.config.getProperty("gemini_text_temperature"));
         Integer maxTokens = Integer.valueOf(this.config.getProperty("gemini_text_max_tokens"));
@@ -44,15 +44,18 @@ public class GeminiLlmConfiguration {
 
     @Bean(name = "geminiSimpleChatClient")
     @Primary
-    public ChatClient geminiSimpleChatClient(@Qualifier("geminiChatModel")ChatModel chatModel) {
+    public ChatClient geminiSimpleChatClient(@Qualifier("geminiChatModel") ChatModel chatModel) {
         return ChatClient.create(chatModel);
     }
 
     @Bean(name = "geminiMemoryChatClient")
-    public ChatClient geminiMemoryChatClient(@Qualifier("geminiChatModel")ChatModel chatModel,
-                                             @Qualifier("labrafaChatMemory")ChatMemory chatMemory) {
+    public ChatClient geminiMemoryChatClient(@Qualifier("geminiChatModel") ChatModel chatModel,
+                                             @Qualifier("labrafaChatMemory") ChatMemory chatMemory) {
         return ChatClient.builder(chatModel)
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .defaultAdvisors(
+                        MessageChatMemoryAdvisor.builder(chatMemory)
+                                .build()
+                )
                 .build();
     }
 }

@@ -44,15 +44,18 @@ public class ChutesLlmConfiguration {
     }
 
     @Bean(name = "chutesSimpleChatClient")
-    public ChatClient chutesSimpleChatClient(@Qualifier("chutesChatModel")ChatModel chatModel) {
+    public ChatClient chutesSimpleChatClient(@Qualifier("chutesChatModel") ChatModel chatModel) {
         return ChatClient.create(chatModel);
     }
 
     @Bean(name = "chutesMemoryChatClient")
-    public ChatClient chutesMemoryChatClient(@Qualifier("chutesChatModel")ChatModel chatModel,
-                                       @Qualifier("labrafaChatMemory")ChatMemory chatMemory) {
+    public ChatClient chutesMemoryChatClient(@Qualifier("chutesChatModel") ChatModel chatModel,
+                                       @Qualifier("labrafaChatMemory") ChatMemory chatMemory) {
         return ChatClient.builder(chatModel)
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .defaultAdvisors(
+                        MessageChatMemoryAdvisor.builder(chatMemory)
+                                .build()
+                )
                 .build();
     }
 }

@@ -26,7 +26,7 @@ public class F1DailyEventService {
     @Value("classpath:prompt/f1chat.prompt")
     private Resource promptTemplate;
 
-    public F1DailyEventService(@Qualifier("simpleChatClient")ChatClient chatClient,
+    public F1DailyEventService(@Qualifier("groqSimpleChatClient")ChatClient chatClient,
                                @Qualifier("F1PgVectorStore")VectorStore vectorStore,
                                TraduccionService traduccionService, SintesisService sintesisService) {
         this.chatClient = chatClient;
@@ -45,10 +45,11 @@ public class F1DailyEventService {
                     this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue()));
 
             IAResponse iaResponse = this.chatClient.prompt()
-                    .user(promptUserSpec -> promptUserSpec
-                            .text(this.promptTemplate)
-                            .param("input", prompt)
-                            .param("documents", documents)
+                    .user(
+                            promptUserSpec -> promptUserSpec
+                                    .text(this.promptTemplate)
+                                    .param("input", prompt)
+                                    .param("documents", documents)
                     )
                     .call()
                     .entity(IAResponse.class);
