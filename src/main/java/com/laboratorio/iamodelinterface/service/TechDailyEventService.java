@@ -52,7 +52,7 @@ public class TechDailyEventService {
                     .call()
                     .entity(IAResponse.class);
 
-            if (iaResponse == null) {
+            if (iaResponse == null || iaResponse.response().isBlank()) {
                 return Constantes.WRONG_ANSWER;
             }
 
