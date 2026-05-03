@@ -58,18 +58,21 @@ public class F1DailyEventService {
                 return Constantes.WRONG_ANSWER;
             }
 
-            log.debug("Respuesta original: {}", iaResponse.response());
+            log.info("Respuesta original: {}", iaResponse.response());
+
+            Thread.sleep(60000);
 
             String traduccion = this.traduccionService.getChatResponse("Español", iaResponse.response());
             if (traduccion.equals(Constantes.WRONG_ANSWER)) {
                 return Constantes.WRONG_ANSWER;
             }
 
-            log.debug("Respuesta traducida: {}", traduccion);
+            log.info("Respuesta traducida: {}", traduccion);
 
             if (traduccion.length() > Constantes.MAX_SIZE) {
+                Thread.sleep(60000);
                 traduccion = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, traduccion);
-                log.debug("Respuesta sintetizada: {}", traduccion);
+                log.info("Respuesta sintetizada: {}", traduccion);
             }
 
             return "#EnUnDiaComoHoy " + traduccion;

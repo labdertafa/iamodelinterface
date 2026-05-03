@@ -6,7 +6,7 @@ Instructions strictes pour la réponse :
 - S’il existe des données sur différents pilotes ou écuries, choisis celles ayant la plus grande importance (titres, victoires, autres faits marquants).
 - Si l’information n’est PAS dans DOCUMENTS, réponds exactement : NO ENCONTRE
 - Si l’information est dans DOCUMENTS, réponds avec un objet JSON valide contenant un seul champ nommé "response".
-- Le texte dans "response" doit avoir un maximum de 420 caractères.
+- Le texte dans "response" doit avoir un maximum de 260 caractères.
 - N’inclus aucun texte supplémentaire, aucune explication, aucun commentaire, ni blocs de code.
 
 QUESTION:

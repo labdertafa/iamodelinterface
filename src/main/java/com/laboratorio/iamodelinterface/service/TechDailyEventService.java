@@ -56,12 +56,13 @@ public class TechDailyEventService {
                 return Constantes.WRONG_ANSWER;
             }
 
-            log.debug("Respuesta original: {}", iaResponse.response());
+            log.info("Respuesta original: {}", iaResponse.response());
 
             String sintesis = iaResponse.response();
             if (sintesis.length() > Constantes.MAX_SIZE) {
+                Thread.sleep(60000);
                 sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, sintesis);
-                log.debug("Respuesta sintetizada: {}", sintesis);
+                log.info("Respuesta sintetizada: {}", sintesis);
             }
 
             return "#EnUnDiaComoHoy " + sintesis;
