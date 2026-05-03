@@ -23,7 +23,7 @@ public class FunctionsUtil {
 
         SearchRequest request = SearchRequest.builder()
                 .query(query)
-                .topK(50)
+                .topK(10)
                 .filterExpression(filterExpr)
                 .build();
 
