@@ -1,4 +1,7 @@
 package com.laboratorio.iamodelinterface.model;
 
-public record IAResponse(String response) {
+public record IAResponse(
+        int documentId,
+        String response
+) {
 }

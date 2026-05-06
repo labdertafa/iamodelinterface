@@ -2,6 +2,7 @@ package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.IAResponse;
+import com.laboratorio.iamodelinterface.model.RetrievedDocument;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import com.laboratorio.iamodelinterface.util.FunctionsUtil;
 import com.laboratorio.iamodelinterface.util.IdiomaEnum;
@@ -14,6 +15,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -41,8 +44,17 @@ public class F1DailyEventService {
             String prompt = String.format("Dis‑moi l’événement le plus important survenu en Formule 1 un jour comme aujourd’hui, %d %s",
                     date.getDayOfMonth(), nombreMes);
 
-            String documents = String.join("\n", FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonth(
-                    this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue()));
+            List<RetrievedDocument> docs = FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonth(
+                    this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue());
+
+            String documents = docs.stream()
+                    .map(doc -> """
+                            documentId: %d
+                            
+                            DOCUMENT: %s
+                            """.formatted(doc.documentId(), doc.content())
+                    )
+                    .collect(Collectors.joining("\n-------------------\n"));
 
             IAResponse iaResponse = this.chatClient.prompt()
                     .user(
@@ -57,6 +69,18 @@ public class F1DailyEventService {
             if (iaResponse == null || iaResponse.response().isBlank()) {
                 return Constantes.WRONG_ANSWER;
             }
+
+            if (iaResponse.documentId() == 0) {
+                // No se encontró respuesta
+            }
+
+            String imagenName = docs.stream()
+                    .filter(doc -> doc.documentId() == iaResponse.documentId())
+                    .findFirst()
+                    .map(RetrievedDocument::imageName)
+                    .orElse(null);
+            // Se hace el manejo de la imagen para el envío de la respuesta
+
 
             log.info("Respuesta original: {}", iaResponse.response());
 

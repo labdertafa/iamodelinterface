@@ -1,11 +1,13 @@
 package com.laboratorio.iamodelinterface.util;
 
+import com.laboratorio.iamodelinterface.model.RetrievedDocument;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,7 +20,8 @@ public class FunctionsUtil {
         return date.format(formatter);
     }
 
-    public static List<String> findSimilarDocumentsInSpecificDayOfMonth(VectorStore vectorStore, String query, int day, int month) {
+    public static List<RetrievedDocument> findSimilarDocumentsInSpecificDayOfMonth(
+            VectorStore vectorStore, String query, int day, int month) {
         String filterExpr = String.format("contextDay == %d AND contextMonth == %d", day, month);
 
         SearchRequest request = SearchRequest.builder()
@@ -29,8 +32,18 @@ public class FunctionsUtil {
 
         List<Document> documents = vectorStore.similaritySearch(request);
 
-        return documents.stream()
-                .map(Document::getFormattedContent)
-                .toList();
+        int i = 1;
+        List<RetrievedDocument> retrievedDocuments = new ArrayList<>();
+        for (Document document : documents) {
+            var retrievedDocument = new RetrievedDocument(
+                    i,
+                    document.getFormattedContent(),
+                    (String) document.getMetadata().get("imageName")
+            );
+            i++;
+            retrievedDocuments.add(retrievedDocument);
+        }
+
+        return retrievedDocuments;
     }
 }
