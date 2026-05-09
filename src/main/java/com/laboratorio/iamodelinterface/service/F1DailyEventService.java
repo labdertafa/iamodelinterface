@@ -63,7 +63,8 @@ public class F1DailyEventService {
             Thread.sleep(60000);
 
             String traduccion = this.traduccionService.getChatResponse("Español", iaResponse.response());
-            if (traduccion.equals(Constantes.WRONG_ANSWER)) {
+            if (traduccion.isBlank() || traduccion.equals(Constantes.WRONG_ANSWER)) {
+                log.error("Error haciendo la traducción de la respuesta, se obtuvo una respuesta vacía o incorrecta");
                 return Constantes.WRONG_ANSWER;
             }
 
@@ -72,6 +73,10 @@ public class F1DailyEventService {
             if (traduccion.length() > Constantes.MAX_SIZE) {
                 Thread.sleep(60000);
                 traduccion = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, traduccion);
+                if (traduccion.isBlank() || traduccion.equals(Constantes.WRONG_ANSWER)) {
+                    log.error("Error haciendo la síntesis de la respuesta, se obtuvo una respuesta vacía o incorrecta");
+                    return Constantes.WRONG_ANSWER;
+                }
                 log.info("Respuesta sintetizada: {}", traduccion);
             }
 

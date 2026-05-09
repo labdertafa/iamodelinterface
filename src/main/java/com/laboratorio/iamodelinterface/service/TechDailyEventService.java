@@ -62,6 +62,10 @@ public class TechDailyEventService {
             if (sintesis.length() > Constantes.MAX_SIZE) {
                 Thread.sleep(60000);
                 sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, sintesis);
+                if (sintesis.isBlank() || sintesis.equals(Constantes.WRONG_ANSWER)) {
+                    log.error("Error haciendo la síntesis de la respuesta, se obtuvo una respuesta vacía o incorrecta");
+                    return Constantes.WRONG_ANSWER;
+                }
                 log.info("Respuesta sintetizada: {}", sintesis);
             }
 

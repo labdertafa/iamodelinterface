@@ -31,7 +31,7 @@ public class TechDailyEventServiceTest {
 
      @Test
     public void techChatTest() {
-         LocalDate fecha = LocalDate.of(2026, 4, 19);
+         LocalDate fecha = LocalDate.of(2026, 5, 9);
 
          String respuesta = this.chatService.getEventResponse(fecha);
 
