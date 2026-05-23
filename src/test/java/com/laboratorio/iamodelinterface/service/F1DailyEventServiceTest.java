@@ -1,6 +1,6 @@
 package com.laboratorio.iamodelinterface.service;
 
-import com.laboratorio.iamodelinterface.GroqLlmConfiguration;
+import com.laboratorio.iamodelinterface.config.GroqLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesEmbeddingConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.GeminiLlmConfiguration;
@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+// import java.nio.file.Files;
+// import java.nio.file.Path;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +38,7 @@ public class F1DailyEventServiceTest {
 
     @Test
     public void f1ChatTest() throws IOException {
-        LocalDate fecha = LocalDate.of(2026, 1, 1);
+        LocalDate fecha = LocalDate.of(2026, 5, 18);
 
         EventResponse eventResponse = this.chatService.getEventResponse(fecha);
 
@@ -48,7 +48,7 @@ public class F1DailyEventServiceTest {
         assertTrue(eventResponse.image().length > 0);
 
         log.info("Respuesta: {}", eventResponse.content());
-        Path destino = Path.of("captura.png");
-        Files.write(destino, eventResponse.image());
+        /* Path destino = Path.of("captura.png");
+        Files.write(destino, eventResponse.image()); */
     }
 }

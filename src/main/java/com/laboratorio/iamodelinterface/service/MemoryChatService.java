@@ -18,7 +18,7 @@ public class MemoryChatService {
 
     private final ChatClient chatClient;
 
-    public MemoryChatService(@Qualifier("groqMemoryChatClient") ChatClient chatClient) {
+    public MemoryChatService(@Qualifier("memoryChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 

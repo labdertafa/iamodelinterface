@@ -1,7 +1,6 @@
-package com.laboratorio.iamodelinterface;
+package com.laboratorio.iamodelinterface.config;
 
 import com.laboratorio.clientapilibrary.utils.ReaderConfig;
-import com.laboratorio.iamodelinterface.config.MemoryDataSourceConfig;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;

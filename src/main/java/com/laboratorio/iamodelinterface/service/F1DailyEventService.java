@@ -31,7 +31,7 @@ public class F1DailyEventService {
     @Value("classpath:prompt/f1chat.prompt")
     private Resource promptTemplate;
 
-    public F1DailyEventService(@Qualifier("groqSimpleChatClient")ChatClient chatClient,
+    public F1DailyEventService(@Qualifier("simpleChatClient")ChatClient chatClient,
                                @Qualifier("F1PgVectorStore")VectorStore vectorStore,
                                TraduccionService traduccionService, SintesisService sintesisService,
                                SupabaseStorageService storageService) {
@@ -66,6 +66,7 @@ public class F1DailyEventService {
                                     .text(this.promptTemplate)
                                     .param("input", prompt)
                                     .param("documents", documents)
+                                    .param("text_size", Constantes.TEXT_SIZE)
                     )
                     .call()
                     .entity(IAResponse.class);

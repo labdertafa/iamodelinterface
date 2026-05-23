@@ -16,7 +16,7 @@ public class TraduccionService {
 
     private final ChatClient chatClient;
 
-    public TraduccionService(@Qualifier("groqSimpleChatClient") ChatClient chatClient) {
+    public TraduccionService(@Qualifier("simpleChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 

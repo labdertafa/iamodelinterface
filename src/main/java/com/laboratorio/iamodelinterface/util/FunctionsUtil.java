@@ -54,7 +54,7 @@ public class FunctionsUtil {
             var f1Document = new RetrievedDocument(
                     i,
                     document.getFormattedContent(),
-                    (String) document.getMetadata().get("imageName")
+                    (String) document.getMetadata().get("imagename")
             );
             i++;
             retrievedDocuments.add(f1Document);

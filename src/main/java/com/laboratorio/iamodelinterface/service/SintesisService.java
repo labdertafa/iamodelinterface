@@ -16,7 +16,7 @@ public class SintesisService {
 
     private final ChatClient chatClient;
 
-    public SintesisService(@Qualifier("groqSimpleChatClient") ChatClient chatClient) {
+    public SintesisService(@Qualifier("simpleChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
