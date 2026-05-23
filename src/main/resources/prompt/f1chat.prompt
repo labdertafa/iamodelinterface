@@ -16,7 +16,7 @@ Instructions strictes pour la réponse :
   }
 
 Règles :
-- "response" : maximum 260 caractères
+- "response" : maximum 400 caractères
 - "imageFileName" : doit être exactement celui associé au document utilisé
 - aucun texte supplémentaire
 

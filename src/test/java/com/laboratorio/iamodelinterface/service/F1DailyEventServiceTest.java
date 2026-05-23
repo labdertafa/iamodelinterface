@@ -5,14 +5,19 @@ import com.laboratorio.iamodelinterface.config.ChutesEmbeddingConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.GeminiLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.llmConfiguration;
+import com.laboratorio.iamodelinterface.model.EventResponse;
+import com.laboratorio.iamodelinterface.util.Constantes;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         ChutesLlmConfiguration.class,
@@ -23,7 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         SimpleChatService.class,
         F1DailyEventService.class,
         TraduccionService.class,
-        SintesisService.class
+        SintesisService.class,
+        SupabaseStorageService.class,
 })
 @Slf4j
 public class F1DailyEventServiceTest {
@@ -31,13 +37,18 @@ public class F1DailyEventServiceTest {
     private F1DailyEventService chatService;
 
     @Test
-    public void f1ChatTest() {
-        LocalDate fecha = LocalDate.of(2026, 5, 2);
+    public void f1ChatTest() throws IOException {
+        LocalDate fecha = LocalDate.of(2026, 1, 1);
 
-        String respuesta = this.chatService.getEventResponse(fecha);
+        EventResponse eventResponse = this.chatService.getEventResponse(fecha);
 
-        assertNotNull(respuesta);
+        assertNotNull(eventResponse);
+        assertNotEquals(Constantes.WRONG_ANSWER, eventResponse.content());
+        assertNotNull(eventResponse.image());
+        assertTrue(eventResponse.image().length > 0);
 
-        log.info("Respuesta: {}", respuesta);
-  }
+        log.info("Respuesta: {}", eventResponse.content());
+        Path destino = Path.of("captura.png");
+        Files.write(destino, eventResponse.image());
+    }
 }

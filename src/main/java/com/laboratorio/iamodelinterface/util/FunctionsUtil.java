@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class FunctionsUtil {
-    private FunctionsUtil() {}
+    private static final int MAX_DOCUMENTS = 5;
+    private FunctionsUtil() {
+    }
 
     public static String getMonthName(LocalDate date, IdiomaEnum idioma) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constantes.MONTH_PATTERN,
@@ -20,30 +22,52 @@ public class FunctionsUtil {
         return date.format(formatter);
     }
 
-    public static List<RetrievedDocument> findSimilarDocumentsInSpecificDayOfMonth(
-            VectorStore vectorStore, String query, int day, int month) {
+    private static SearchRequest getSearchRequest(String query, int day, int month) {
         String filterExpr = String.format("contextDay == %d AND contextMonth == %d", day, month);
-
-        SearchRequest request = SearchRequest.builder()
+        return SearchRequest.builder()
                 .query(query)
-                .topK(5)
+                .topK(MAX_DOCUMENTS)
                 .filterExpression(filterExpr)
                 .build();
+    }
 
+    public static List<String> findSimilarDocumentsInSpecificDayOfMonth(
+            VectorStore vectorStore, String query, int day, int month) {
+
+        SearchRequest request = getSearchRequest(query, day, month);
+        List<Document> documents = vectorStore.similaritySearch(request);
+
+        return documents.stream()
+                .map(Document::getFormattedContent)
+                .toList();
+    }
+
+    public static List<RetrievedDocument> findSimilarDocumentsInSpecificDayOfMonthList(
+            VectorStore vectorStore, String query, int day, int month) {
+
+        SearchRequest request = getSearchRequest(query, day, month);
         List<Document> documents = vectorStore.similaritySearch(request);
 
         int i = 1;
         List<RetrievedDocument> retrievedDocuments = new ArrayList<>();
         for (Document document : documents) {
-            var retrievedDocument = new RetrievedDocument(
+            var f1Document = new RetrievedDocument(
                     i,
                     document.getFormattedContent(),
                     (String) document.getMetadata().get("imageName")
             );
             i++;
-            retrievedDocuments.add(retrievedDocument);
+            retrievedDocuments.add(f1Document);
         }
 
         return retrievedDocuments;
+    }
+
+    public static String getImageName(List<RetrievedDocument> documents, int selectedId) {
+        return documents.stream()
+                .filter(doc -> doc.documentId() == selectedId)
+                .findFirst()
+                .map(RetrievedDocument::imageName)
+                .orElse(null);
     }
 }
