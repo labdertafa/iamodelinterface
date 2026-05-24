@@ -1,6 +1,6 @@
 package com.laboratorio.iamodelinterface.service;
 
-import com.laboratorio.iamodelinterface.GroqLlmConfiguration;
+import com.laboratorio.iamodelinterface.config.GroqLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesEmbeddingConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.GeminiLlmConfiguration;

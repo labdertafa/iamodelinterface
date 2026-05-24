@@ -3,14 +3,28 @@ Ta tâche est de répondre à la question de la section QUESTION en utilisant un
 
 Instructions strictes pour la réponse :
 - Les événements les plus importantes sont ceux relatives aux Grands Prix, puis celles concernant les naissances, et enfin les décès.
-- S’il existe des données sur différents pilotes ou écuries, choisis celles ayant la plus grande importance (titres, victoires, autres faits marquants).
-- Si l’information n’est PAS dans DOCUMENTS, réponds exactement : NO ENCONTRE
-- Si l’information est dans DOCUMENTS, réponds avec un objet JSON valide contenant un seul champ nommé "response".
-- Le texte dans "response" doit avoir un maximum de 450 caractères.
-- N’inclus aucun texte supplémentaire, aucune explication, aucun commentaire, ni blocs de code.
+- S’il existe des données sur différents pilotes, choisis celui ayant la plus grande importance (titres, victoires, autres faits marquants).
+- Si l’information est dans DOCUMENTS, réponds avec un objet JSON valide contenant exactement deux champs :
+  \{
+    "documentId": ...,
+    "response": "..."
+  \}
+- Si l’information n’est PAS dans DOCUMENTS, réponds exactement :
+  \{
+    "documentId": 0,
+    "response": "NO ENCONTRE"
+  \}
+
+Règles :
+- "response" : maximum TEXT_SIZE caractères
+- "imageFileName" : doit être exactement celui associé au document utilisé
+- aucun texte supplémentaire
 
 QUESTION:
 {input}
 
 DOCUMENTS:
 {documents}
+
+TEXT_SIZE:
+{text_size}

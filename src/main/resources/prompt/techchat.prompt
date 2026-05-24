@@ -5,7 +5,7 @@ Instrucciones estrictas para la respuesta:
 - Si encuentras varios eventos, prioriza los eventos de informática y computación.
 - Si la información no está en la sección DOCUMENTS, responde exactamente : NO ENCONTRE
 - Si la información se encuentra en la sección DOCUMENTS, responde con un objeto JSON válido con un solo campo llamado "response".
-- El texto del campo "response" debe tener un máximo de 420 caracteres.
+- El texto del campo "response" debe tener un máximo de TEXT_SIZE caracteres.
 - No incluyas ningún texto adicional, explicaciones, comentarios, ni bloques de códigos.
 
 QUESTION:
@@ -13,3 +13,6 @@ QUESTION:
 
 DOCUMENTS:
 {documents}
+
+TEXT_SIZE:
+{text_size}

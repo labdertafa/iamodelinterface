@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class SimpleChatService {
     private final ChatClient chatClient;
 
-    public SimpleChatService(@Qualifier("groqSimpleChatClient") ChatClient chatClient) {
+    public SimpleChatService(@Qualifier("simpleChatClient") ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 

@@ -1,6 +1,6 @@
 package com.laboratorio.iamodelinterface.service;
 
-import com.laboratorio.iamodelinterface.GroqLlmConfiguration;
+import com.laboratorio.iamodelinterface.config.GroqLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.ChutesLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.GeminiLlmConfiguration;
 import com.laboratorio.iamodelinterface.config.MemoryDataSourceConfig;
@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         MemoryDataSourceConfig.class,
         ChutesLlmConfiguration.class,
         GeminiLlmConfiguration.class,
+        GroqLlmConfiguration.class,
         GroqLlmConfiguration.class,
         llmConfiguration.class,
         MemoryChatService.class

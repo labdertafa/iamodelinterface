@@ -25,7 +25,7 @@ public class TechDailyEventService {
     @Value("classpath:prompt/techchat.prompt")
     private Resource promptTemplate;
 
-    public TechDailyEventService(@Qualifier("groqSimpleChatClient") ChatClient chatClient,
+    public TechDailyEventService(@Qualifier("simpleChatClient") ChatClient chatClient,
                                  @Qualifier("TechPgVectorStore") VectorStore vectorStore,
                                  SintesisService sintesisService) {
         this.chatClient = chatClient;
@@ -48,6 +48,7 @@ public class TechDailyEventService {
                                     .text(this.promptTemplate)
                                     .param("input", prompt)
                                     .param("documents", documents)
+                                    .param("text_size", Constantes.TEXT_SIZE)
                     )
                     .call()
                     .entity(IAResponse.class);

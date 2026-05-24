@@ -31,7 +31,7 @@ public class ChutesEmbeddingConfiguration {
     }
 
     @Bean(name = "F1PgVectorStore")
-    public VectorStore f1VectorStore(@Qualifier("pgVectorJdbcTemplate") JdbcTemplate jdbcTemplate,
+    public VectorStore f1VectorStore(@Qualifier("supabaseJdbcTemplate") JdbcTemplate jdbcTemplate,
                                      @Qualifier("chutesEmbeddingModel")EmbeddingModel embeddingModel) {
         String tableName = this.config.getProperty("f1_daily_event.table.name");
         int nDimensions = Integer.parseInt(this.config.getProperty("embedding.dimensions"));

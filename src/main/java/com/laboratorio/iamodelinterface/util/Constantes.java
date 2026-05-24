@@ -4,6 +4,7 @@ public class Constantes {
     private Constantes() {
     }
 
+    public final static int TEXT_SIZE = 400;
     public final static int MAX_SIZE = 260;
     public final static String WRONG_ANSWER = "No se obtuvo respuesta";
 
