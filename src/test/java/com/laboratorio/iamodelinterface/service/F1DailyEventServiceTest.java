@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-// import java.nio.file.Files;
-// import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +48,7 @@ public class F1DailyEventServiceTest {
         assertTrue(eventResponse.image().length > 0);
 
         log.info("Respuesta: {}", eventResponse.content());
-        /* Path destino = Path.of("captura.png");
-        Files.write(destino, eventResponse.image()); */
+        Path destino = Path.of("captura.png");
+        Files.write(destino, eventResponse.image());
     }
 }
