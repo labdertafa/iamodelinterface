@@ -6,7 +6,7 @@
 
     <groupId>com.laboratorio</groupId>
     <artifactId>iamodelinterface</artifactId>
-    <version>1.5.8</version>
+    <version>1.5.9</version>
     <packaging>jar</packaging>
     <name>IaModelInterface</name>
     <description>Librería que ejecuta los modelos de inteligencia artificial usados por el Laboratorio de Rafa</description>
@@ -34,7 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Versiones -->
-        <spring-ai.version>1.1.5</spring-ai.version>
+        <spring-ai.version>1.1.7</spring-ai.version>
         <spring-boot.version>3.5.14</spring-boot.version>
         <postgresql.version>42.7.11</postgresql.version>
         <clientapilibrary.version>2.3.0</clientapilibrary.version>

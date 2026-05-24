@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         ChutesLlmConfiguration.class,
         GeminiLlmConfiguration.class,
         GroqLlmConfiguration.class,
+        GroqLlmConfiguration.class,
         llmConfiguration.class,
         MemoryChatService.class
 })
