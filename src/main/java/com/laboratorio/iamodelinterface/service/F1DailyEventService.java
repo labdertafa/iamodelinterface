@@ -80,11 +80,17 @@ public class F1DailyEventService {
 
             if (traduccion.length() > Constantes.MAX_SIZE) {
                 Thread.sleep(60000);
-                traduccion = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, traduccion);
-                if (traduccion.isBlank() || traduccion.equals(Constantes.WRONG_ANSWER)) {
-                    return new EventResponse(Constantes.WRONG_ANSWER, null);
+                try {
+                    String sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, traduccion);
+                    if (sintesis.isBlank() || sintesis.equals(Constantes.WRONG_ANSWER)) {
+                        return new EventResponse(Constantes.WRONG_ANSWER, null);
+                    }
+                    log.info("Respuesta sintetizada: {}", sintesis);
+                    traduccion = sintesis;
+                } catch (Exception e) {
+                    log.warn("Error sintetizando la respuesta: {}", e.getMessage());
+                    log.warn("No habrá respuesta sintetizada, se usará la traducción original aunque exceda el límite de caracteres");
                 }
-                log.info("Respuesta sintetizada: {}", traduccion);
             }
 
             String imagenName = FunctionsUtil.getImageName(documentList, iaResponse.documentId());

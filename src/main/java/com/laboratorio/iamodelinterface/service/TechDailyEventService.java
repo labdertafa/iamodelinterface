@@ -67,21 +67,27 @@ public class TechDailyEventService {
 
             log.info("Respuesta original: {}", iaResponse.response());
 
-            String sintesis = iaResponse.response();
-            if (sintesis.length() > Constantes.MAX_SIZE) {
+            String respuesta = iaResponse.response();
+            if (respuesta.length() > Constantes.MAX_SIZE) {
                 Thread.sleep(60000);
-                sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, sintesis);
-                if (sintesis.isBlank() || sintesis.equals(Constantes.WRONG_ANSWER)) {
-                    return new EventResponse(Constantes.WRONG_ANSWER, null);
+                try {
+                    String sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, respuesta);
+                    if (sintesis.isBlank() || sintesis.equals(Constantes.WRONG_ANSWER)) {
+                        return new EventResponse(Constantes.WRONG_ANSWER, null);
+                    }
+                    log.info("Respuesta sintetizada: {}", sintesis);
+                    respuesta = sintesis;
+                } catch (Exception e) {
+                    log.warn("Error sintetizando la respuesta: {}", e.getMessage());
+                    log.warn("No habrá respuesta sintetizada, se usará la traducción original aunque exceda el límite de caracteres");
                 }
-                log.info("Respuesta sintetizada: {}", sintesis);
             }
 
             String imagenName = FunctionsUtil.getImageName(documentList, iaResponse.documentId());
             byte[] image = this.storageUtil.getImagen(imagenName);
 
             return new EventResponse(
-                    "#EnUnDiaComoHoy " + sintesis,
+                    "#EnUnDiaComoHoy " + respuesta,
                     image
             );
         } catch (Exception e) {
