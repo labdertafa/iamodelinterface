@@ -1,7 +1,7 @@
 package com.laboratorio.iamodelinterface.config;
 
-import com.laboratorio.clientapilibrary.utils.ReaderConfig;
 import com.laboratorio.iamodelinterface.model.ConnectionData;
+import com.laboratorio.iamodelinterface.util.ConnectionDataUtils;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
@@ -9,7 +9,6 @@ import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryReposito
 import org.springframework.ai.chat.memory.repository.jdbc.PostgresChatMemoryRepositoryDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -17,94 +16,46 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
-
 @Configuration
 public class MemoryDataSourceConfig {
     @Value("${spring.profiles.active:default}")
     private String activeProfiles;
 
-    private final ReaderConfig config = new ReaderConfig("config//ia_models_config.properties");
-
-    private ConnectionData getPostgreConnectionData() {
-        String server;
-        String bbdd;
-        String username;
-        String password;
-
-        if (activeProfiles.contains("prod")) {
-            server = config.getProperty("servidor_pgvector");
-            bbdd = config.getProperty("bbdd_pg_vector");
-            username = config.getProperty("usuario_pgvector");
-            password = config.getProperty("password_pgvector");
-        } else {
-            server = config.getProperty("servidor_pgvector_test");
-            bbdd = config.getProperty("bbdd_pg_vector_test");
-            username = config.getProperty("usuario_pgvector_test");
-            password = config.getProperty("password_pgvector_test");
-        }
-
-        String url = "jdbc:postgresql://" + server + "/" + bbdd;
-
-        return new ConnectionData(username, password, url);
-    }
-
-    private ConnectionData getSupabaseConnectionData() {
-        String server;
-        String bbdd;
-        String username;
-        String password;
-
-        if (activeProfiles.contains("prod")) {
-            server = config.getProperty("prod.supabase.hostname");
-            bbdd = config.getProperty("prod.subabase.database.name");
-            username = config.getProperty("prod.supabase.username");
-            password = config.getProperty("prod.supabase.password");
-        } else {
-            server = config.getProperty("test.supabase.hostname");
-            bbdd = config.getProperty("test.subabase.database.name");
-            username = config.getProperty("test.supabase.username");
-            password = config.getProperty("test.supabase.password");
-        }
-
-        String url = "jdbc:postgresql://" + server + "/" + bbdd;
-
-        return new ConnectionData(username, password, url);
-    }
-
+    @Primary
     @Bean(name = "pgVectorDataSource")
     public DataSource dataSource() {
-        ConnectionData cd = this.getPostgreConnectionData();
-        return DataSourceBuilder.create()
-                .driverClassName("org.postgresql.Driver")
-                .url(cd.url())
-                .username(cd.username())
-                .password(cd.password())
-                .build();
+        ConnectionData cd = ConnectionDataUtils.getPostgreConnectionData(this.activeProfiles);
+        return ConnectionDataUtils.getPostgreDataSource(cd);
     }
 
-    @Bean(name = "supabaseDataSource")
-    public DataSource supabaseDataSource() {
-        ConnectionData cd = this.getSupabaseConnectionData();
-        return DataSourceBuilder.create()
-                .driverClassName("org.postgresql.Driver")
-                .url(cd.url())
-                .username(cd.username())
-                .password(cd.password())
-                .build();
+    @Bean(name = "supabaseF1EventDataSource")
+    public DataSource supabaseF1EventDataSource() {
+        return ConnectionDataUtils.getEventDataSource(this.activeProfiles, "f1event");
     }
 
-    @Bean(name = "pgVectorJdbcTemplate")
-    public JdbcTemplate jdbcTemplate(@Qualifier("pgVectorDataSource")DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
+    @Bean(name = "supabaseTechEventDataSource")
+    public DataSource supabaseTechEventDataSource() {
+        return ConnectionDataUtils.getEventDataSource(this.activeProfiles, "techevent");
     }
 
-    @Bean(name = "supabaseJdbcTemplate")
-    public JdbcTemplate supabaseJdbcTemplate(@Qualifier("supabaseDataSource")DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean(name = "labrafaChatMemory")
     @Primary
+    @Bean(name = "pgVectorJdbcTemplate")
+    public JdbcTemplate jdbcTemplate(@Qualifier("pgVectorDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean(name = "supabaseF1TechJdbcTemplate")
+    public JdbcTemplate supabaseF1TechJdbcTemplate(@Qualifier("supabaseF1EventDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean(name = "supabaseTechEventJdbcTemplate")
+    public JdbcTemplate supabaseTechEventJdbcTemplate(@Qualifier("supabaseTechEventDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Primary
+    @Bean(name = "labrafaChatMemory")
     public ChatMemory chatMemory(@Qualifier("pgVectorJdbcTemplate")JdbcTemplate jdbcTemplate) {
         ChatMemoryRepository repository = JdbcChatMemoryRepository.builder()
                 .jdbcTemplate(jdbcTemplate)

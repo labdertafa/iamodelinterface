@@ -28,8 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
         SimpleChatService.class,
         F1DailyEventService.class,
         TraduccionService.class,
-        SintesisService.class,
-        SupabaseStorageService.class,
+        SintesisService.class
 })
 @Slf4j
 public class F1DailyEventServiceTest {
@@ -38,7 +37,7 @@ public class F1DailyEventServiceTest {
 
     @Test
     public void f1ChatTest() throws IOException {
-        LocalDate fecha = LocalDate.of(2026, 5, 18);
+        LocalDate fecha = LocalDate.of(2026, 5, 30);
 
         EventResponse eventResponse = this.chatService.getEventResponse(fecha);
 

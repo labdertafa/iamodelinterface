@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class FunctionsUtil {
     private static final int MAX_DOCUMENTS = 5;
@@ -31,17 +32,6 @@ public class FunctionsUtil {
                 .build();
     }
 
-    public static List<String> findSimilarDocumentsInSpecificDayOfMonth(
-            VectorStore vectorStore, String query, int day, int month) {
-
-        SearchRequest request = getSearchRequest(query, day, month);
-        List<Document> documents = vectorStore.similaritySearch(request);
-
-        return documents.stream()
-                .map(Document::getFormattedContent)
-                .toList();
-    }
-
     public static List<RetrievedDocument> findSimilarDocumentsInSpecificDayOfMonthList(
             VectorStore vectorStore, String query, int day, int month) {
 
@@ -61,6 +51,17 @@ public class FunctionsUtil {
         }
 
         return retrievedDocuments;
+    }
+
+    public static String getFormatedDocuments(List<RetrievedDocument> documents) {
+        return documents.stream()
+                .map(doc -> """
+                            documentId: %d
+                            
+                            DOCUMENT: %s
+                            """.formatted(doc.documentId(), doc.content())
+                )
+                .collect(Collectors.joining("\n-------------------\n"));
     }
 
     public static String getImageName(List<RetrievedDocument> documents, int selectedId) {
