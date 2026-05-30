@@ -21,7 +21,6 @@ public class MemoryDataSourceConfig {
     @Value("${spring.profiles.active:default}")
     private String activeProfiles;
 
-    @Primary
     @Bean(name = "pgVectorDataSource")
     public DataSource dataSource() {
         ConnectionData cd = ConnectionDataUtils.getPostgreConnectionData(this.activeProfiles);
@@ -38,7 +37,6 @@ public class MemoryDataSourceConfig {
         return ConnectionDataUtils.getEventDataSource(this.activeProfiles, "techevent");
     }
 
-    @Primary
     @Bean(name = "pgVectorJdbcTemplate")
     public JdbcTemplate jdbcTemplate(@Qualifier("pgVectorDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
