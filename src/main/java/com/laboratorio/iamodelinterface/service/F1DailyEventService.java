@@ -7,6 +7,7 @@ import com.laboratorio.iamodelinterface.model.RetrievedDocument;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import com.laboratorio.iamodelinterface.util.FunctionsUtil;
 import com.laboratorio.iamodelinterface.util.IdiomaEnum;
+import com.laboratorio.iamodelinterface.util.SupabaseStorageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,20 +26,19 @@ public class F1DailyEventService {
     private final VectorStore vectorStore;
     private final TraduccionService traduccionService;
     private final SintesisService sintesisService;
-    private final SupabaseStorageService storageService;
+    private final SupabaseStorageUtil storageUtil;
 
     @Value("classpath:prompt/f1chat.prompt")
     private Resource promptTemplate;
 
     public F1DailyEventService(@Qualifier("simpleChatClient")ChatClient chatClient,
-                               @Qualifier("F1PgVectorStore")VectorStore vectorStore,
-                               TraduccionService traduccionService, SintesisService sintesisService,
-                               SupabaseStorageService storageService) {
+                               @Qualifier("f1PgVectorStore")VectorStore vectorStore,
+                               TraduccionService traduccionService, SintesisService sintesisService) {
         this.chatClient = chatClient;
         this.vectorStore = vectorStore;
         this.traduccionService = traduccionService;
         this.sintesisService = sintesisService;
-        this.storageService = storageService;
+        this.storageUtil = new SupabaseStorageUtil("f1event");
     }
 
     public EventResponse getEventResponse(LocalDate date) {
@@ -48,17 +47,10 @@ public class F1DailyEventService {
             String prompt = String.format("Dis‑moi l’événement le plus important survenu en Formule 1 un jour comme aujourd’hui, %d %s",
                     date.getDayOfMonth(), nombreMes);
 
-            List<RetrievedDocument> docs = FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonthList(
+            List<RetrievedDocument> documentList = FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonthList(
                     this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue());
 
-            String documents = docs.stream()
-                    .map(doc -> """
-                            documentId: %d
-                            
-                            DOCUMENT: %s
-                            """.formatted(doc.documentId(), doc.content())
-                    )
-                    .collect(Collectors.joining("\n-------------------\n"));
+            String documents = FunctionsUtil.getFormatedDocuments(documentList);
 
             IAResponse iaResponse = this.chatClient.prompt()
                     .user(
@@ -89,14 +81,14 @@ public class F1DailyEventService {
             if (traduccion.length() > Constantes.MAX_SIZE) {
                 Thread.sleep(60000);
                 traduccion = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, traduccion);
-                if (traduccion.equals(Constantes.WRONG_ANSWER)) {
+                if (traduccion.isBlank() || traduccion.equals(Constantes.WRONG_ANSWER)) {
                     return new EventResponse(Constantes.WRONG_ANSWER, null);
                 }
                 log.info("Respuesta sintetizada: {}", traduccion);
             }
 
-            String imagenName = FunctionsUtil.getImageName(docs, iaResponse.documentId());
-            byte[] image = this.storageService.getImagen(imagenName);
+            String imagenName = FunctionsUtil.getImageName(documentList, iaResponse.documentId());
+            byte[] image = this.storageUtil.getImagen(imagenName);
 
             return new EventResponse(
                     "#EnUnDiaComoHoy " + traduccion,

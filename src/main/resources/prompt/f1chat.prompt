@@ -17,7 +17,7 @@ Instructions strictes pour la réponse :
 
 Règles :
 - "response" : maximum TEXT_SIZE caractères
-- "imageFileName" : doit être exactement celui associé au document utilisé
+- "documentId" : doit être exactement celui associé au document utilisé
 - aucun texte supplémentaire
 
 QUESTION:

@@ -1,10 +1,13 @@
 package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
+import com.laboratorio.iamodelinterface.model.EventResponse;
 import com.laboratorio.iamodelinterface.model.IAResponse;
+import com.laboratorio.iamodelinterface.model.RetrievedDocument;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import com.laboratorio.iamodelinterface.util.FunctionsUtil;
 import com.laboratorio.iamodelinterface.util.IdiomaEnum;
+import com.laboratorio.iamodelinterface.util.SupabaseStorageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -14,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -21,26 +25,30 @@ public class TechDailyEventService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
     private final SintesisService sintesisService;
+    private final SupabaseStorageUtil storageUtil;
 
     @Value("classpath:prompt/techchat.prompt")
     private Resource promptTemplate;
 
     public TechDailyEventService(@Qualifier("simpleChatClient") ChatClient chatClient,
-                                 @Qualifier("TechPgVectorStore") VectorStore vectorStore,
+                                 @Qualifier("techPgVectorStore") VectorStore vectorStore,
                                  SintesisService sintesisService) {
         this.chatClient = chatClient;
         this.vectorStore = vectorStore;
         this.sintesisService = sintesisService;
+        this.storageUtil = new SupabaseStorageUtil("techevent");
     }
 
-    public String getEventResponse(LocalDate date) {
+    public EventResponse getEventResponse(LocalDate date) {
         try {
             String nombreMes = FunctionsUtil.getMonthName(date, IdiomaEnum.CASTELLANO);
             String prompt = String.format("Dime el evento histórico más relevante en el area en las áreas de la tecnología, computación, informática o la innovación en un día como hoy %d de %s",
                     date.getDayOfMonth(), nombreMes);
 
-            String documents = String.join("\n", FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonth(
-                    this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue()));
+            List<RetrievedDocument> documentList = FunctionsUtil.findSimilarDocumentsInSpecificDayOfMonthList(
+                    this.vectorStore, prompt, date.getDayOfMonth(), date.getMonthValue());
+
+            String documents = FunctionsUtil.getFormatedDocuments(documentList);
 
             IAResponse iaResponse = this.chatClient.prompt()
                     .user(
@@ -53,8 +61,8 @@ public class TechDailyEventService {
                     .call()
                     .entity(IAResponse.class);
 
-            if (iaResponse == null || iaResponse.response().isBlank()) {
-                return Constantes.WRONG_ANSWER;
+            if (iaResponse == null || iaResponse.response().isBlank() || iaResponse.documentId() == 0) {
+                return new EventResponse(Constantes.WRONG_ANSWER, null);
             }
 
             log.info("Respuesta original: {}", iaResponse.response());
@@ -64,13 +72,18 @@ public class TechDailyEventService {
                 Thread.sleep(60000);
                 sintesis = this.sintesisService.getChatResponse(Constantes.MAX_SIZE, sintesis);
                 if (sintesis.isBlank() || sintesis.equals(Constantes.WRONG_ANSWER)) {
-                    log.error("Error haciendo la síntesis de la respuesta, se obtuvo una respuesta vacía o incorrecta");
-                    return Constantes.WRONG_ANSWER;
+                    return new EventResponse(Constantes.WRONG_ANSWER, null);
                 }
                 log.info("Respuesta sintetizada: {}", sintesis);
             }
 
-            return "#EnUnDiaComoHoy " + sintesis;
+            String imagenName = FunctionsUtil.getImageName(documentList, iaResponse.documentId());
+            byte[] image = this.storageUtil.getImagen(imagenName);
+
+            return new EventResponse(
+                    "#EnUnDiaComoHoy " + sintesis,
+                    image
+            );
         } catch (Exception e) {
             throw new IaModelException("Error obteniendo respuesta en el chat especializado en tecnología", e);
         }

@@ -3,10 +3,21 @@ Tu tarea consiste en responder a la pregunta de la sección QUESTION utilizando 
 
 Instrucciones estrictas para la respuesta:
 - Si encuentras varios eventos, prioriza los eventos de informática y computación.
-- Si la información no está en la sección DOCUMENTS, responde exactamente : NO ENCONTRE
-- Si la información se encuentra en la sección DOCUMENTS, responde con un objeto JSON válido con un solo campo llamado "response".
-- El texto del campo "response" debe tener un máximo de TEXT_SIZE caracteres.
-- No incluyas ningún texto adicional, explicaciones, comentarios, ni bloques de códigos.
+- Si la información se encuentra en la sección DOCUMENTS, responde con un objeto JSON válido con dos campos con la estructura siguiente:
+  \{
+    "documentId": ...,
+    "response": "..."
+  \}
+- Si la información no está en la sección DOCUMENTS, responde exactamente:
+  \{
+    "documentId": 0,
+    "response": "NO ENCONTRE"
+  \}
+
+Reglas:
+- "response" : con longitud máxima de TEXT_SIZE caractères
+- "documentId" : debe ser el asociado al documento utilizado
+- No agregues texto adicional
 
 QUESTION:
 {input}
