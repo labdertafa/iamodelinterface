@@ -6,7 +6,7 @@
 
     <groupId>com.laboratorio</groupId>
     <artifactId>iamodelinterface</artifactId>
-    <version>1.7.2</version>
+    <version>1.8.0</version>
     <packaging>jar</packaging>
     <name>IaModelInterface</name>
     <description>Librería que ejecuta los modelos de inteligencia artificial usados por el Laboratorio de Rafa</description>
@@ -127,6 +127,11 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-google-genai</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-ollama</artifactId>
         </dependency>
 
         <dependency>
