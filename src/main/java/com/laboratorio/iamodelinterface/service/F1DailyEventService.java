@@ -2,7 +2,7 @@ package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.EventResponse;
-import com.laboratorio.iamodelinterface.model.IAResponse;
+import com.laboratorio.iamodelinterface.model.IAEventResponse;
 import com.laboratorio.iamodelinterface.model.RetrievedDocument;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import com.laboratorio.iamodelinterface.util.FunctionsUtil;
@@ -52,7 +52,7 @@ public class F1DailyEventService {
 
             String documents = FunctionsUtil.getFormatedDocuments(documentList);
 
-            IAResponse iaResponse = this.chatClient.prompt()
+            IAEventResponse iaEventResponse = this.chatClient.prompt()
                     .user(
                             promptUserSpec -> promptUserSpec
                                     .text(this.promptTemplate)
@@ -61,17 +61,17 @@ public class F1DailyEventService {
                                     .param("text_size", Constantes.TEXT_SIZE)
                     )
                     .call()
-                    .entity(IAResponse.class);
+                    .entity(IAEventResponse.class);
 
-            if (iaResponse == null || iaResponse.response().isBlank() || iaResponse.documentId() == 0) {
+            if (iaEventResponse == null || iaEventResponse.response().isBlank() || iaEventResponse.documentId() == 0) {
                 return new EventResponse(Constantes.WRONG_ANSWER, null);
             }
 
-            log.info("Respuesta original: {}", iaResponse.response());
+            log.info("Respuesta original: {}", iaEventResponse.response());
 
             Thread.sleep(60000);
 
-            String traduccion = this.traduccionService.getChatResponse("Español", iaResponse.response());
+            String traduccion = this.traduccionService.getChatResponse("Español", iaEventResponse.response());
             if (traduccion.equals(Constantes.WRONG_ANSWER)) {
                 return new EventResponse(Constantes.WRONG_ANSWER, null);
             }
@@ -93,7 +93,7 @@ public class F1DailyEventService {
                 }
             }
 
-            String imagenName = FunctionsUtil.getImageName(documentList, iaResponse.documentId());
+            String imagenName = FunctionsUtil.getImageName(documentList, iaEventResponse.documentId());
             byte[] image = this.storageUtil.getImagen(imagenName);
 
             return new EventResponse(

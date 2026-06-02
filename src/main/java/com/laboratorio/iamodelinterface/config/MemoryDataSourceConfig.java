@@ -62,7 +62,7 @@ public class MemoryDataSourceConfig {
 
         return MessageWindowChatMemory.builder()
                 .chatMemoryRepository(repository)
-                .maxMessages(40)
+                .maxMessages(35)
                 .build();
     }
 }

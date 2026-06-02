@@ -2,7 +2,7 @@ package com.laboratorio.iamodelinterface.service;
 
 import com.laboratorio.iamodelinterface.exception.IaModelException;
 import com.laboratorio.iamodelinterface.model.EventResponse;
-import com.laboratorio.iamodelinterface.model.IAResponse;
+import com.laboratorio.iamodelinterface.model.IAEventResponse;
 import com.laboratorio.iamodelinterface.model.RetrievedDocument;
 import com.laboratorio.iamodelinterface.util.Constantes;
 import com.laboratorio.iamodelinterface.util.FunctionsUtil;
@@ -50,7 +50,7 @@ public class TechDailyEventService {
 
             String documents = FunctionsUtil.getFormatedDocuments(documentList);
 
-            IAResponse iaResponse = this.chatClient.prompt()
+            IAEventResponse iaEventResponse = this.chatClient.prompt()
                     .user(
                             promptUserSpec -> promptUserSpec
                                     .text(this.promptTemplate)
@@ -59,15 +59,15 @@ public class TechDailyEventService {
                                     .param("text_size", Constantes.TEXT_SIZE)
                     )
                     .call()
-                    .entity(IAResponse.class);
+                    .entity(IAEventResponse.class);
 
-            if (iaResponse == null || iaResponse.response().isBlank() || iaResponse.documentId() == 0) {
+            if (iaEventResponse == null || iaEventResponse.response().isBlank() || iaEventResponse.documentId() == 0) {
                 return new EventResponse(Constantes.WRONG_ANSWER, null);
             }
 
-            log.info("Respuesta original: {}", iaResponse.response());
+            log.info("Respuesta original: {}", iaEventResponse.response());
 
-            String respuesta = iaResponse.response();
+            String respuesta = iaEventResponse.response();
             if (respuesta.length() > Constantes.MAX_SIZE) {
                 Thread.sleep(60000);
                 try {
@@ -83,7 +83,7 @@ public class TechDailyEventService {
                 }
             }
 
-            String imagenName = FunctionsUtil.getImageName(documentList, iaResponse.documentId());
+            String imagenName = FunctionsUtil.getImageName(documentList, iaEventResponse.documentId());
             byte[] image = this.storageUtil.getImagen(imagenName);
 
             return new EventResponse(

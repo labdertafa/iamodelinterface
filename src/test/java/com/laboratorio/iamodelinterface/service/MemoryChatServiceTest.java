@@ -31,7 +31,7 @@ public class MemoryChatServiceTest {
 
     @Test
     public void memoryChatTest() {
-        String prompt = "Hola, soy Rafa, ¿cómo te llamas?";
+        String prompt = "Eres un profesor de programación experto en Java, C++, Python y SQL. Dame un consejo de buenas prácticas que pueda dar a los estudiantes en cualquiera de estos lenguajes. Evita darme información que ya me hayas dado antes. La respuesta debe limitarse a la información que te estoy solicitando, comenzar con los hashtags #Programacion #BuenasPracticas y debe tener menos de 270 caracteres.";
         UserChatRequest request = new UserChatRequest(UUID.randomUUID().toString(), prompt);
 
         String respuesta = this.chatService.getChatResponse(request);
