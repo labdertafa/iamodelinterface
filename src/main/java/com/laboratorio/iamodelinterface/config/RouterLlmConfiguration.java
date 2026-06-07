@@ -1,0 +1,61 @@
+package com.laboratorio.iamodelinterface.config;
+
+import com.laboratorio.clientapilibrary.utils.ReaderConfig;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@Import({MemoryDataSourceConfig.class})
+public class RouterLlmConfiguration {
+    private final ReaderConfig config = new ReaderConfig("config//ia_models_config.properties");
+
+    @Bean(name = "routerChatModel")
+    public ChatModel routerChatModel() {
+        String baseUrl = this.config.getProperty("router_base_url");
+        String apiKey = this.config.getProperty("router_api_key");
+        String model = this.config.getProperty("router_text_model");
+        Double temperature = Double.valueOf(this.config.getProperty("router_text_temperature"));
+        Integer maxTokens = Integer.valueOf(this.config.getProperty("router_text_max_tokens"));
+
+        return OpenAiChatModel.builder()
+                .openAiApi(
+                        OpenAiApi.builder()
+                                .baseUrl(baseUrl)
+                                .apiKey(apiKey)
+                                .build()
+                )
+                .defaultOptions(
+                        OpenAiChatOptions.builder()
+                                .model(model)
+                                .temperature(temperature)
+                                .maxTokens(maxTokens)
+                                .build()
+                )
+                .build();
+    }
+
+    @Bean(name = "routerSimpleChatClient")
+    public ChatClient routerSimpleChatClient(@Qualifier("routerChatModel") ChatModel chatModel) {
+        return ChatClient.builder(chatModel).build();
+    }
+
+    @Bean(name = "routerMemoryChatClient")
+    public ChatClient routerMemoryChatClient(@Qualifier("routerChatModel") ChatModel chatModel,
+                                               @Qualifier("labrafaChatMemory") ChatMemory chatMemory) {
+        return ChatClient.builder(chatModel)
+                .defaultAdvisors(
+                        MessageChatMemoryAdvisor.builder(chatMemory)
+                                .build()
+                )
+                .build();
+    }
+}
