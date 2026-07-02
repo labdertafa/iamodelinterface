@@ -7,7 +7,6 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +26,10 @@ public class GroqLlmConfiguration {
         Integer maxTokens = Integer.valueOf(this.config.getProperty("groq_text_max_tokens"));
 
         return OpenAiChatModel.builder()
-                .openAiApi(
-                        OpenAiApi.builder()
+                .options(
+                        OpenAiChatOptions.builder()
                                 .baseUrl(baseUrl)
                                 .apiKey(apiKey)
-                                .build()
-                )
-                .defaultOptions(
-                        OpenAiChatOptions.builder()
                                 .model(model)
                                 .temperature(temperature)
                                 .maxTokens(maxTokens)

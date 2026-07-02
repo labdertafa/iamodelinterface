@@ -3,9 +3,9 @@ package com.laboratorio.chutes.embedding;
 import com.laboratorio.chutes.embedding.config.ChutesEmbeddingApi;
 import com.laboratorio.chutes.embedding.model.ChutesEmbeddingRequest;
 import com.laboratorio.chutes.embedding.model.ChutesEmbeddingResponse;
+import org.jspecify.annotations.NonNull;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.*;
-import org.springframework.lang.NonNull;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -51,8 +51,7 @@ public class ChutesEmbeddingModel implements EmbeddingModel {
     }
 
     @Override
-    @NonNull
-    public EmbeddingResponse call(EmbeddingRequest request) {
+    public @NonNull EmbeddingResponse call(EmbeddingRequest request) {
         List<String> texts = request.getInstructions();
         List<Embedding> embeddings = new ArrayList<>();
 
@@ -68,8 +67,7 @@ public class ChutesEmbeddingModel implements EmbeddingModel {
     }
 
     @Override
-    @NonNull
-    public float[] embed(Document document) {
+    public float @NonNull [] embed(Document document) {
         return Objects.requireNonNull(this.getEmbedding(document.getText()));
     }
 }

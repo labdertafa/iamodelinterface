@@ -37,7 +37,7 @@ public class ChutesEmbeddingConfiguration {
 
         return OllamaEmbeddingModel.builder()
                 .ollamaApi(api)
-                .defaultOptions(options)
+                .options(options)
                 .build();
     }
 

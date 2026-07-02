@@ -4,9 +4,9 @@ import com.laboratorio.chutes.exception.ChutesException;
 import com.laboratorio.chutes.image.config.ChutesImageApi;
 import com.laboratorio.chutes.image.config.ChutesImageOptions;
 import com.laboratorio.chutes.image.model.ChutesImageRequest;
+import org.jspecify.annotations.NonNull;
 import org.springframework.ai.image.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.client.RestClient;
 
 import java.util.Base64;
@@ -27,8 +27,7 @@ public class ChutesImageModel implements ImageModel {
     }
 
     @Override
-    @NonNull
-    public ImageResponse call(ImagePrompt imagePrompt) {
+    public @NonNull ImageResponse call(@NonNull ImagePrompt imagePrompt) {
         try {
             if (imagePrompt.getInstructions().isEmpty()) {
                 throw new ChutesException("No se puede construir la imagen con una solicitud vacía");

@@ -32,7 +32,7 @@ public class GeminiLlmConfiguration {
                                 .apiKey(apiKey)
                                 .build()
                 )
-                .defaultOptions(
+                .options(
                         GoogleGenAiChatOptions.builder()
                                 .model(model)
                                 .temperature(temperature)
