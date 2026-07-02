@@ -1,5 +1,6 @@
 package com.laboratorio.iamodelinterface.util;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +74,39 @@ public class ImageGeneratorUtils {
             ImageIO.write(originalImage, "jpg", imageFile);
         } catch (IOException e) {
             log.warn("Ha ocurrido un error cambiando el formato de la imagen generada.");
+        }
+    }
+
+    // Redimensiona una imagen cargada en memoria
+    private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        // Crear una imagen nueva con el tamaño especificado
+        Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+
+        // Crear un BufferedImage con el tamaño deseado
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+
+        // Dibujar la imagen redimensionada en el nuevo BufferedImage
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.drawImage(resultingImage, 0, 0, null);
+        g2d.dispose();
+
+        return resizedImage;
+    }
+
+    // Redimensiona una imagen de un fichero
+    public static void resizeImage(String imagePath, double factor) {
+        try {
+            // 1. Cargar el archivo desde el disco
+            File imageFile = new File(imagePath);
+            BufferedImage originalImage = ImageIO.read(imageFile);
+
+            int newWidth = (int)(originalImage.getWidth() * factor);
+            int newHeight = (int)(originalImage.getHeight() * factor);
+
+            BufferedImage resizedImage = resizeImage(originalImage, newWidth, newHeight);
+            ImageIO.write(resizedImage, "jpg", imageFile);
+        } catch (IOException e) {
+            log.warn("Ha ocurrido un error cambiando las dimensiones de la imagen. Se conserva la imagen original.");
         }
     }
 }
